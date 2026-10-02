@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Multiple URL Opener</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.10);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header-icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: #e8f0fe;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* Mode Section */
+
+        .mode-box {
+            margin-bottom: 20px;
+        }
+
+        .mode-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .mode-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .mode-option {
+            position: relative;
+        }
+
+        .mode-option input {
+            display: none;
+        }
+
+        .mode-label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+        .mode-label:hover {
+            border-color: #2563eb;
+        }
+
+        .mode-option input:checked + .mode-label {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .mode-name {
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .mode-description {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Input */
+
+        .input-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .url-count {
+            color: #2563eb;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            outline: none;
+            resize: vertical;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #111827;
+            background: #f9fafb;
+            transition: 0.2s;
+        }
+
+        textarea:focus {
+            border-color: #2563eb;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+        }
+
+        textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Buttons */
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 13px 22px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #openBtn {
+            flex: 1;
+            color: white;
+            background: #2563eb;
+        }
+
+        #openBtn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        #clearBtn {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        #clearBtn:hover {
+            background: #e2e8f0;
+        }
+
+        /* Status */
+
+        #message {
+            min-height: 25px;
+            margin-top: 18px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* URL Preview */
+
+        .preview {
+            margin-top: 25px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .preview-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .preview-count {
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 13px;
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+            background: #f8fafc;
+        }
+
+        .number {
+            min-width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2563eb;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .link-item a {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .link-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Empty */
+
+        .empty {
+            padding: 25px;
+            text-align: center;
+            color: #9ca3af;
+            border: 1px dashed #d1d5db;
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 20px 12px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 14px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .mode-options {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            #openBtn {
+                width: 100%;
+            }
+
+            #clearBtn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <div class="header-icon">
+            🔗
+        </div>
+
+        <h1>Multiple URL Opener</h1>
+
+        <p class="subtitle">
+            Open multiple websites quickly in separate browser tabs
+        </p>
+
+    </div>
+
+
+    <!-- Multi Place URL Options -->
+
+    <div class="mode-box">
+
+        <div class="mode-title">
+            URL Input Mode
+        </div>
+
+        <div class="mode-options">
+
+            <div class="mode-option">
+
+                <input
+                    type="radio"
+                    name="mode"
+                    id="lineMode"
+                    value="line"
+                    checked
+                >
+
+                <label
+                    for="lineMode"
+                    class="mode-label"
+                >
+
+                    <span class="mode-name">
+                        📄 Multiple Lines
+                    </span>
+
+                    <span class="mode-description">
+                        One URL on each line
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="mode-option">
+
+                <input
+                    type="radio"
+                    name="mode"
+                    id="multiMode"
+                    value="multi"
+                >
+
+                <label
+                    for="multiMode"
+                    class="mode-label"
+                >
+
+                    <span class="mode-name">
+                        ⚡ Multi-Place URL
+                    </span>
+
+                    <span class="mode-description">
+                        Paste URLs using comma, space or new line
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- URL Input -->
+
+    <div class="input-label">
+
+        <span>
+            Paste URLs
+        </span>
+
+        <span class="url-count">
+            URLs: <span id="count">0</span>
+        </span>
+
+    </div>
+
+
+    <textarea
+        id="urlInput"
+        placeholder="https://youtube.com
+https://facebook.com
+https://google.com
+https://github.com
+https://chatgpt.com"
+    ></textarea>
+
+
+    <!-- Buttons -->
+
+    <div class="buttons">
+
+        <button id="openBtn">
+            🚀 Open All Tabs
+        </button>
+
+        <button id="clearBtn">
+            🗑 Clear
+        </button>
+
+    </div>
+
+
+    <!-- Message -->
+
+    <div id="message"></div>
+
+
+    <!-- Preview -->
+
+    <div class="preview">
+
+        <div class="preview-header">
+
+            <span class="preview-title">
+                URL Preview
+            </span>
+
+            <span class="preview-count">
+                <span id="previewCount">0</span> URLs
+            </span>
+
+        </div>
+
+        <div
+            class="links"
+            id="links"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const urlInput = document.getElementById("urlInput");
+
+const countEl = document.getElementById("count");
+
+const previewCount =
+    document.getElementById("previewCount");
+
+const openBtn =
+    document.getElementById("openBtn");
+
+const clearBtn =
+    document.getElementById("clearBtn");
+
+const message =
+    document.getElementById("message");
+
+const links =
+    document.getElementById("links");
+
+const modeInputs =
+    document.querySelectorAll(
+        'input[name="mode"]'
+    );
+
+
+// Get selected mode
+
+function getMode() {
+
+    return document.querySelector(
+        'input[name="mode"]:checked'
+    ).value;
+
+}
+
+
+// Convert input into URLs
+
+function getUrls() {
+
+    const mode = getMode();
+
+    let text = urlInput.value.trim();
+
+    if (!text) {
+        return [];
+    }
+
+
+    let urls;
+
+
+    if (mode === "line") {
+
+        // One URL per line
+
+        urls = text
+            .split(/\r?\n/)
+            .map(url => url.trim())
+            .filter(Boolean);
+
+    } else {
+
+        // Multi-place mode
+        // comma + space + new line
+
+        urls = text
+            .split(/[\s,]+/)
+            .map(url => url.trim())
+            .filter(Boolean);
+
+    }
+
+
+    // Add HTTPS automatically
+
+    urls = urls.map(url => {
+
+        if (
+            !/^https?:\/\//i.test(url)
+        ) {
+
+            return "https://" + url;
+
+        }
+
+        return url;
+
+    });
+
+
+    // Remove duplicate URLs
+
+    return [...new Set(urls)];
+
+}
+
+
+// Update preview
+
+function updatePreview() {
+
+    const urls = getUrls();
+
+    countEl.textContent = urls.length;
+
+    previewCount.textContent =
+        urls.length;
+
+    links.innerHTML = "";
+
+
+    if (urls.length === 0) {
+
+        links.innerHTML = `
+            <div class="empty">
+                Paste URLs above to see preview
+            </div>
+        `;
+
+        return;
+    }
+
+
+    urls.forEach((url, index) => {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "link-item";
+
+
+        const number =
+            document.createElement("span");
+
+        number.className = "number";
+
+        number.textContent =
+            index + 1;
+
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+
+        link.target = "_blank";
+
+        link.rel = "noopener noreferrer";
+
+        link.textContent = url;
+
+
+        item.appendChild(number);
+
+        item.appendChild(link);
+
+        links.appendChild(item);
+
+    });
+
+}
+
+
+// Input event
+
+urlInput.addEventListener(
+    "input",
+    updatePreview
+);
+
+
+// Mode change
+
+modeInputs.forEach(input => {
+
+    input.addEventListener(
+        "change",
+        updatePreview
+    );
+
+});
+
+
+// Clear
+
+clearBtn.addEventListener(
+    "click",
+    () => {
+
+        urlInput.value = "";
+
+        message.textContent = "";
+
+        updatePreview();
+
+        urlInput.focus();
+
+    }
+);
+
+
+// Open all URLs
+
+openBtn.addEventListener(
+    "click",
+    () => {
+
+        const urls = getUrls();
+
+
+        if (urls.length === 0) {
+
+            message.textContent =
+                "❌ Please enter at least one URL.";
+
+            message.style.color = "#dc2626";
+
+            return;
+
+        }
+
+
+        message.textContent =
+            `Opening ${urls.length} URLs...`;
+
+        message.style.color =
+            "#2563eb";
+
+
+        /*
+            Each URL is opened from
+            the same user click event.
+        */
+
+        urls.forEach(url => {
+
+            const newTab =
+                window.open(
+                    url,
+                    "_blank"
+                );
+
+            if (newTab) {
+
+                try {
+
+                    newTab.opener = null;
+
+                } catch (error) {}
+
+            }
+
+        });
+
+
+        setTimeout(() => {
+
+            message.textContent =
+                `✅ Open request sent for ${urls.length} URLs.`;
+
+            message.style.color =
+                "#16a34a";
+
+        }, 500);
+
+    }
+);
+
+
+// Initial preview
+
+updatePreview();
+
+</script>
+
+</body>
+</html>
