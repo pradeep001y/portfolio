@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,21 +32,11 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.10);
         }
 
+        /* Header */
+
         .header {
             text-align: center;
             margin-bottom: 28px;
-        }
-
-        .header-icon {
-            width: 65px;
-            height: 65px;
-            margin: 0 auto 15px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            background: #e8f0fe;
         }
 
         h1 {
@@ -57,63 +48,6 @@
         .subtitle {
             color: #6b7280;
             font-size: 15px;
-        }
-
-        /* Mode Section */
-
-        .mode-box {
-            margin-bottom: 20px;
-        }
-
-        .mode-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .mode-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .mode-option {
-            position: relative;
-        }
-
-        .mode-option input {
-            display: none;
-        }
-
-        .mode-label {
-            display: block;
-            padding: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-            background: #fff;
-        }
-
-        .mode-label:hover {
-            border-color: #2563eb;
-        }
-
-        .mode-option input:checked + .mode-label {
-            border-color: #2563eb;
-            background: #eff6ff;
-        }
-
-        .mode-name {
-            font-weight: bold;
-            color: #111827;
-        }
-
-        .mode-description {
-            display: block;
-            margin-top: 5px;
-            font-size: 12px;
-            color: #6b7280;
         }
 
         /* Input */
@@ -161,6 +95,7 @@
 
         .buttons {
             display: flex;
+            align-items: stretch;
             gap: 12px;
             margin-top: 18px;
         }
@@ -187,6 +122,7 @@
         }
 
         #clearBtn {
+            flex: 0 0 auto;
             background: #f1f5f9;
             color: #334155;
         }
@@ -298,18 +234,11 @@
                 font-size: 24px;
             }
 
-            .mode-options {
-                grid-template-columns: 1fr;
-            }
-
             .buttons {
                 flex-direction: column;
             }
 
-            #openBtn {
-                width: 100%;
-            }
-
+            #openBtn,
             #clearBtn {
                 width: 100%;
             }
@@ -319,442 +248,322 @@
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- Header -->
+        <!-- Header -->
 
-    <div class="header">
+        <div class="header">
 
-        <div class="header-icon">
-            🔗
-        </div>
+            <h1>Multiple URL Opener</h1>
 
-        <h1>Multiple URL Opener</h1>
-
-        <p class="subtitle">
-            Open multiple websites quickly in separate browser tabs
-        </p>
-
-    </div>
-
-
-    <!-- Multi Place URL Options -->
-
-    <div class="mode-box">
-
-        <div class="mode-title">
-            URL Input Mode
-        </div>
-
-        <div class="mode-options">
-
-            <div class="mode-option">
-
-                <input
-                    type="radio"
-                    name="mode"
-                    id="lineMode"
-                    value="line"
-                    checked
-                >
-
-                <label
-                    for="lineMode"
-                    class="mode-label"
-                >
-
-                    <span class="mode-name">
-                        📄 Multiple Lines
-                    </span>
-
-                    <span class="mode-description">
-                        One URL on each line
-                    </span>
-
-                </label>
-
-            </div>
-
-
-            <div class="mode-option">
-
-                <input
-                    type="radio"
-                    name="mode"
-                    id="multiMode"
-                    value="multi"
-                >
-
-                <label
-                    for="multiMode"
-                    class="mode-label"
-                >
-
-                    <span class="mode-name">
-                        ⚡ Multi-Place URL
-                    </span>
-
-                    <span class="mode-description">
-                        Paste URLs using comma, space or new line
-                    </span>
-
-                </label>
-
-            </div>
+            <p class="subtitle">
+                Open multiple websites quickly in separate browser tabs
+            </p>
 
         </div>
 
-    </div>
+
+        <!-- URL Input -->
+
+        <div class="input-label">
+
+            <span>
+                Paste URLs
+            </span>
+
+            <span class="url-count">
+                URLs: <span id="count">0</span>
+            </span>
+
+        </div>
 
 
-    <!-- URL Input -->
-
-    <div class="input-label">
-
-        <span>
-            Paste URLs
-        </span>
-
-        <span class="url-count">
-            URLs: <span id="count">0</span>
-        </span>
-
-    </div>
-
-
-    <textarea
-        id="urlInput"
-        placeholder="https://youtube.com
+        <textarea
+            id="urlInput"
+            placeholder="https://youtube.com
 https://facebook.com
 https://google.com
 https://github.com
 https://chatgpt.com"
-    ></textarea>
+        ></textarea>
 
 
-    <!-- Buttons -->
+        <!-- Buttons -->
 
-    <div class="buttons">
+        <div class="buttons">
 
-        <button id="openBtn">
-            🚀 Open All Tabs
-        </button>
+            <button id="openBtn">
+                🚀 Open All Tabs
+            </button>
 
-        <button id="clearBtn">
-            🗑 Clear
-        </button>
-
-    </div>
-
-
-    <!-- Message -->
-
-    <div id="message"></div>
-
-
-    <!-- Preview -->
-
-    <div class="preview">
-
-        <div class="preview-header">
-
-            <span class="preview-title">
-                URL Preview
-            </span>
-
-            <span class="preview-count">
-                <span id="previewCount">0</span> URLs
-            </span>
+            <button id="clearBtn">
+                🗑 Clear
+            </button>
 
         </div>
 
-        <div
-            class="links"
-            id="links"
-        ></div>
+
+        <!-- Message -->
+
+        <div id="message"></div>
+
+
+        <!-- Preview -->
+
+        <div class="preview">
+
+            <div class="preview-header">
+
+                <span class="preview-title">
+                    URL Preview
+                </span>
+
+                <span class="preview-count">
+                    <span id="previewCount">0</span> URLs
+                </span>
+
+            </div>
+
+            <div
+                class="links"
+                id="links"
+            ></div>
+
+        </div>
 
     </div>
 
-</div>
+
+    <script>
+
+        const urlInput = document.getElementById("urlInput");
+
+        const countEl = document.getElementById("count");
+
+        const previewCount =
+            document.getElementById("previewCount");
+
+        const openBtn =
+            document.getElementById("openBtn");
+
+        const clearBtn =
+            document.getElementById("clearBtn");
+
+        const message =
+            document.getElementById("message");
+
+        const links =
+            document.getElementById("links");
 
 
-<script>
+        /* Get URLs */
 
-const urlInput = document.getElementById("urlInput");
+        function getUrls() {
 
-const countEl = document.getElementById("count");
+            let text = urlInput.value.trim();
 
-const previewCount =
-    document.getElementById("previewCount");
+            if (!text) {
+                return [];
+            }
 
-const openBtn =
-    document.getElementById("openBtn");
+            /*
+                One URL per line
+            */
 
-const clearBtn =
-    document.getElementById("clearBtn");
-
-const message =
-    document.getElementById("message");
-
-const links =
-    document.getElementById("links");
-
-const modeInputs =
-    document.querySelectorAll(
-        'input[name="mode"]'
-    );
+            let urls = text
+                .split(/\r?\n/)
+                .map(url => url.trim())
+                .filter(Boolean);
 
 
-// Get selected mode
+            /*
+                Add HTTPS automatically
+            */
 
-function getMode() {
+            urls = urls.map(url => {
 
-    return document.querySelector(
-        'input[name="mode"]:checked'
-    ).value;
+                if (!/^https?:\/\//i.test(url)) {
+                    return "https://" + url;
+                }
 
-}
+                return url;
 
-
-// Convert input into URLs
-
-function getUrls() {
-
-    const mode = getMode();
-
-    let text = urlInput.value.trim();
-
-    if (!text) {
-        return [];
-    }
+            });
 
 
-    let urls;
+            /*
+                Remove duplicate URLs
+            */
 
-
-    if (mode === "line") {
-
-        // One URL per line
-
-        urls = text
-            .split(/\r?\n/)
-            .map(url => url.trim())
-            .filter(Boolean);
-
-    } else {
-
-        // Multi-place mode
-        // comma + space + new line
-
-        urls = text
-            .split(/[\s,]+/)
-            .map(url => url.trim())
-            .filter(Boolean);
-
-    }
-
-
-    // Add HTTPS automatically
-
-    urls = urls.map(url => {
-
-        if (
-            !/^https?:\/\//i.test(url)
-        ) {
-
-            return "https://" + url;
+            return [...new Set(urls)];
 
         }
 
-        return url;
 
-    });
+        /* Update Preview */
 
+        function updatePreview() {
 
-    // Remove duplicate URLs
+            const urls = getUrls();
 
-    return [...new Set(urls)];
+            countEl.textContent = urls.length;
 
-}
+            previewCount.textContent = urls.length;
 
-
-// Update preview
-
-function updatePreview() {
-
-    const urls = getUrls();
-
-    countEl.textContent = urls.length;
-
-    previewCount.textContent =
-        urls.length;
-
-    links.innerHTML = "";
+            links.innerHTML = "";
 
 
-    if (urls.length === 0) {
+            if (urls.length === 0) {
 
-        links.innerHTML = `
-            <div class="empty">
-                Paste URLs above to see preview
-            </div>
-        `;
+                links.innerHTML = `
+                    <div class="empty">
+                        Paste URLs above to see preview
+                    </div>
+                `;
 
-        return;
-    }
-
-
-    urls.forEach((url, index) => {
-
-        const item =
-            document.createElement("div");
-
-        item.className = "link-item";
+                return;
+            }
 
 
-        const number =
-            document.createElement("span");
+            urls.forEach((url, index) => {
 
-        number.className = "number";
+                const item =
+                    document.createElement("div");
 
-        number.textContent =
-            index + 1;
-
-
-        const link =
-            document.createElement("a");
-
-        link.href = url;
-
-        link.target = "_blank";
-
-        link.rel = "noopener noreferrer";
-
-        link.textContent = url;
+                item.className = "link-item";
 
 
-        item.appendChild(number);
+                const number =
+                    document.createElement("span");
 
-        item.appendChild(link);
+                number.className = "number";
 
-        links.appendChild(item);
-
-    });
-
-}
+                number.textContent = index + 1;
 
 
-// Input event
+                const link =
+                    document.createElement("a");
 
-urlInput.addEventListener(
-    "input",
-    updatePreview
-);
+                link.href = url;
 
+                link.target = "_blank";
 
-// Mode change
+                link.rel = "noopener noreferrer";
 
-modeInputs.forEach(input => {
-
-    input.addEventListener(
-        "change",
-        updatePreview
-    );
-
-});
+                link.textContent = url;
 
 
-// Clear
+                item.appendChild(number);
 
-clearBtn.addEventListener(
-    "click",
-    () => {
+                item.appendChild(link);
 
-        urlInput.value = "";
+                links.appendChild(item);
 
-        message.textContent = "";
+            });
+
+        }
+
+
+        /* Input Event */
+
+        urlInput.addEventListener(
+            "input",
+            updatePreview
+        );
+
+
+        /* Clear */
+
+        clearBtn.addEventListener(
+            "click",
+            () => {
+
+                urlInput.value = "";
+
+                message.textContent = "";
+
+                updatePreview();
+
+                urlInput.focus();
+
+            }
+        );
+
+
+        /* Open All URLs */
+
+        openBtn.addEventListener(
+            "click",
+            () => {
+
+                const urls = getUrls();
+
+
+                if (urls.length === 0) {
+
+                    message.textContent =
+                        "❌ Please enter at least one URL.";
+
+                    message.style.color = "#dc2626";
+
+                    return;
+                }
+
+
+                message.textContent =
+                    `Opening ${urls.length} URLs...`;
+
+                message.style.color =
+                    "#2563eb";
+
+
+                /*
+                    Open every URL
+                    from the same user click event.
+                */
+
+                urls.forEach(url => {
+
+                    const newTab =
+                        window.open(
+                            url,
+                            "_blank"
+                        );
+
+
+                    if (newTab) {
+
+                        try {
+
+                            newTab.opener = null;
+
+                        } catch (error) {}
+
+                    }
+
+                });
+
+
+                setTimeout(() => {
+
+                    message.textContent =
+                        `✅ Open request sent for ${urls.length} URLs.`;
+
+                    message.style.color =
+                        "#16a34a";
+
+                }, 500);
+
+            }
+        );
+
+
+        /* Initial Preview */
 
         updatePreview();
 
-        urlInput.focus();
-
-    }
-);
-
-
-// Open all URLs
-
-openBtn.addEventListener(
-    "click",
-    () => {
-
-        const urls = getUrls();
-
-
-        if (urls.length === 0) {
-
-            message.textContent =
-                "❌ Please enter at least one URL.";
-
-            message.style.color = "#dc2626";
-
-            return;
-
-        }
-
-
-        message.textContent =
-            `Opening ${urls.length} URLs...`;
-
-        message.style.color =
-            "#2563eb";
-
-
-        /*
-            Each URL is opened from
-            the same user click event.
-        */
-
-        urls.forEach(url => {
-
-            const newTab =
-                window.open(
-                    url,
-                    "_blank"
-                );
-
-            if (newTab) {
-
-                try {
-
-                    newTab.opener = null;
-
-                } catch (error) {}
-
-            }
-
-        });
-
-
-        setTimeout(() => {
-
-            message.textContent =
-                `✅ Open request sent for ${urls.length} URLs.`;
-
-            message.style.color =
-                "#16a34a";
-
-        }, 500);
-
-    }
-);
-
-
-// Initial preview
-
-updatePreview();
-
-</script>
+    </script>
 
 </body>
+
 </html>
